@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface StudentRepository extends CrudRepository<Students, Long> {
 
-    List<Students> findByName(String name);
+    List<Students> findByNameIgnoreCaseContaining(String name);
 
 }

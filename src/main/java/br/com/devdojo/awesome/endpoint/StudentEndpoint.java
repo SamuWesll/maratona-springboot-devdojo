@@ -23,6 +23,11 @@ public class StudentEndpoint {
 //        System.out.println(dateUtil.formatLocalDateTimeToDateBaseStyle(LocalDateTime.now()));
         return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
     }
+
+    @GetMapping(path = "/findByName/{name}")
+    public ResponseEntity<?> findStudentByName(@PathVariable String name) {
+        return new ResponseEntity<>(studentRepository.findByNameIgnoreCaseContaining(name), HttpStatus.OK);
+    }
 //
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> getStudentById(@PathVariable("id") Long id) {
@@ -34,7 +39,7 @@ public class StudentEndpoint {
 //
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Students students) {
-        return new ResponseEntity<>(studentRepository.save(students), HttpStatus.OK);
+        return new ResponseEntity<>(studentRepository.save(students), HttpStatus.CREATED);
     };
 
     @DeleteMapping(path = "/{id}")
