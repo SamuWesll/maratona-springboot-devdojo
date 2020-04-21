@@ -23,13 +23,13 @@ public class StudentEndpoint {
         this.dateUtil = dateUtil;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<?> listAll() {
 //        System.out.println(dateUtil.formatLocalDateTimeToDateBaseStyle(LocalDateTime.now()));
         return new ResponseEntity<>(Students.studentsList, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<?> getStudentById(@PathVariable("id") int id) {
         Students students = new Students();
         students.setId(id);
@@ -39,10 +39,23 @@ public class StudentEndpoint {
         return new ResponseEntity<>(Students.studentsList.get(index), HttpStatus.OK);
     };
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<?> save(@RequestBody Students students) {
         Students.studentsList.add(students);
         return new ResponseEntity<>(students, HttpStatus.OK);
+    };
+
+    @DeleteMapping
+    public ResponseEntity<?> delete(@RequestBody Students students) {
+        Students.studentsList.remove(students);
+        return new ResponseEntity<>(HttpStatus.OK);
+    };
+
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody Students students) {
+        Students.studentsList.remove(students);
+        Students.studentsList.add(students);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
