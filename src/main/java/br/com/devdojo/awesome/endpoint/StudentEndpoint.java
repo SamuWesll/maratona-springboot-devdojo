@@ -1,6 +1,7 @@
 package br.com.devdojo.awesome.endpoint;
 
 import br.com.devdojo.awesome.error.CustomErrorType;
+import br.com.devdojo.awesome.error.ResourceNotFoundException;
 import br.com.devdojo.awesome.model.Students;
 import br.com.devdojo.awesome.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,14 @@ public class StudentEndpoint {
 //
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> getStudentById(@PathVariable("id") Long id) {
-        Students student = studentRepository.findById(id).get();
-        if(student == null)
-            return new ResponseEntity<>(new CustomErrorType("Student not found"), HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(student, HttpStatus.OK);
+        try {
+            Students student = studentRepository.findById(id).get();
+            return new ResponseEntity<>(student, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Student not found for ID "+id);
+        }
     };
-//
+
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Students students) {
         return new ResponseEntity<>(studentRepository.save(students), HttpStatus.CREATED);
@@ -44,15 +47,25 @@ public class StudentEndpoint {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        Students studentDelete = studentRepository.findById(id).get();
-        studentRepository.delete(studentDelete);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            Students studentDelete = studentRepository.findById(id).get();
+            studentRepository.delete(studentDelete);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Student not found for ID "+id);
+        }
     };
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody Students students) {
         studentRepository.save(students);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void verifyIfStudentExists(Long id) {
+       if(studentRepository.findById(id).get() == null) {
+           throw new ResourceNotFoundException("Student not found for ID " + id);
+       }
     }
 
 }
