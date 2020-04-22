@@ -20,11 +20,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
-                    .anyRequest().authenticated()
-                    .and().csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and().headers().frameOptions().sameOrigin()
+                .antMatchers("/*/protected/**").hasRole("USER")
+                .antMatchers("/*/admin/**").hasRole("ADMIN")
+//                .antMatchers("/h2-console/**").permitAll()
+//                    .anyRequest().authenticated()
+//                    .and().csrf().disable()
+//                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                    .and().headers().frameOptions().sameOrigin()
 //                    .and().addFilterBefore(new AutenticacaoFilter(tokenService, autenticacaoService), UsernamePasswordAuthenticationFilter.class);
 //                    .anyRequest().authenticated()
                 .and()

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("student")
+@RequestMapping("v1")
 public class StudentEndpoint {
 
     private final StudentRepository studentRepository;
@@ -25,18 +25,18 @@ public class StudentEndpoint {
         this.studentRepository = studentRepository;
     }
 //
-    @GetMapping
+    @GetMapping(path = "protected/students")
     public ResponseEntity<?> listAll(Pageable pageable) {
 //        System.out.println(dateUtil.formatLocalDateTimeToDateBaseStyle(LocalDateTime.now()));
         return new ResponseEntity<>(studentRepository.findAll(pageable), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/findByName/{name}")
+    @GetMapping(path = "protected/students/findByName/{name}")
     public ResponseEntity<?> findStudentByName(@PathVariable String name) {
         return new ResponseEntity<>(studentRepository.findByNameIgnoreCaseContaining(name), HttpStatus.OK);
     }
 //
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "protected/students/{id}")
     public ResponseEntity<?> getStudentById(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails) {
         try {
             Students student = studentRepository.findById(id).get();
@@ -46,12 +46,12 @@ public class StudentEndpoint {
         }
     };
 
-    @PostMapping
+    @PostMapping(path = "admin/students")
     public ResponseEntity<?> save(@Valid @RequestBody Students students) {
         return new ResponseEntity<>(studentRepository.save(students), HttpStatus.CREATED);
     };
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "admin/students/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
@@ -63,7 +63,7 @@ public class StudentEndpoint {
         }
     };
 
-    @PutMapping
+    @PutMapping(path = "admin/students")
     public ResponseEntity<?> update(@RequestBody Students students) {
         studentRepository.save(students);
         return new ResponseEntity<>(HttpStatus.OK);
