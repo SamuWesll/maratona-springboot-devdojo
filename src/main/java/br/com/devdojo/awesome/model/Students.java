@@ -19,7 +19,15 @@ public class Students extends AbstractEntity{
     @Email
     private String email;
 
-//    Getters e Setters
+    @Override
+    public String toString() {
+        return "Students{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
+    //    Getters e Setters
     public String getName() {
         return name;
     }
