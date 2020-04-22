@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("student")
 public class StudentEndpoint {
@@ -41,7 +43,7 @@ public class StudentEndpoint {
     };
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Students students) {
+    public ResponseEntity<?> save(@Valid @RequestBody Students students) {
         return new ResponseEntity<>(studentRepository.save(students), HttpStatus.CREATED);
     };
 
