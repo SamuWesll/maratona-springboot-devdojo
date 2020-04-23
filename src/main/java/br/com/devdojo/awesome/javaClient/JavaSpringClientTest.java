@@ -2,10 +2,13 @@ package br.com.devdojo.awesome.javaClient;
 
 import br.com.devdojo.awesome.model.Students;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class JavaSpringClientTest {
 
@@ -17,8 +20,12 @@ public class JavaSpringClientTest {
         ResponseEntity<Students> forEntity = restTemplate.getForEntity("/{id}", Students.class, 1);
 //        System.out.println(students);
         System.out.println(forEntity.getBody());
-        Students[] students = restTemplate.getForObject("/", Students[].class);
-        System.out.println(Arrays.toString(students));
+//        Students[] students = restTemplate.getForObject("/", Students[].class);
+//        System.out.println(Arrays.toString(students));
+        ResponseEntity<List<Students>> exchange = restTemplate.exchange("/", HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Students>>() {
+        });
+        System.out.println(exchange.getBody());
     }
 
 }

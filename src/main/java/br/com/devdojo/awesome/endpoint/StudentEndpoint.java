@@ -28,7 +28,7 @@ public class StudentEndpoint {
     @GetMapping(path = "protected/students")
     public ResponseEntity<?> listAll(Pageable pageable) {
 //        System.out.println(dateUtil.formatLocalDateTimeToDateBaseStyle(LocalDateTime.now()));
-        return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(studentRepository.findAll(pageable), HttpStatus.OK);
     }
 
     @GetMapping(path = "protected/students/findByName/{name}")
