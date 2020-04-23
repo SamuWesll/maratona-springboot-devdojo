@@ -1,5 +1,6 @@
 package br.com.devdojo.awesome.javaClient;
 
+import br.com.devdojo.awesome.handler.RestResponseExceptionHandler;
 import br.com.devdojo.awesome.model.Students;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -15,11 +16,15 @@ public class JavaClientDAO {
 
     private RestTemplate restTemplate = new RestTemplateBuilder()
             .rootUri("http://localhost:8080/v1/protected/students")
-            .basicAuthentication("samuel","123").build();
+            .basicAuthentication("samuel","123")
+            .errorHandler(new RestResponseExceptionHandler())
+            .build();
 
     private RestTemplate restTemplateAdmin = new RestTemplateBuilder()
             .rootUri("http://localhost:8080/v1/admin/students")
-            .basicAuthentication("admin","123").build();
+            .basicAuthentication("admin","123")
+            .errorHandler(new RestResponseExceptionHandler())
+            .build();
 
     public Students findById(long id) {
         Students student = restTemplate.getForObject("/{id}", Students.class, 1);
@@ -39,6 +44,14 @@ public class JavaClientDAO {
 //                HttpMethod.POST,new HttpEntity<>(studentsPost, createJSONHeader()), Students.class);
         Students studentsPostObject = restTemplateAdmin.postForObject("/", studentsPost, Students.class);
         return studentsPostObject;
+    };
+
+    public void update(Students student) {
+        restTemplateAdmin.put("/",student);
+    }
+
+    public void delete(long id) {
+        restTemplateAdmin.delete("/{id}",id);
     }
 
     private static HttpHeaders createJSONHeader() {

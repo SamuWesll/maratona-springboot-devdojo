@@ -14,11 +14,14 @@ public class JavaSpringClientTest {
     public static void main(String[] args) {
 
         Students studentsPost = new Students();
-        studentsPost.setName("Alice Gata");
+        studentsPost.setName("Alice");
         studentsPost.setEmail("alice@rocha.com");
+        studentsPost.setId(74L);
         JavaClientDAO dao = new JavaClientDAO();
 
         System.out.println(dao.save(studentsPost));
+//        dao.update(studentsPost);
+        dao.delete(74);
     }
 
 }
